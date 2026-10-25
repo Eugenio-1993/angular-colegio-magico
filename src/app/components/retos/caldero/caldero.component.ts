@@ -54,13 +54,40 @@ export class CalderoComponent implements OnInit, OnDestroy {
     this.iniciarFuegoCaldero();
 
     // =======================================================================
-    // TODO: Reto 1 - En ngOnInit(), inicializa 'this.pociones' con al menos 3 pociones:
-    // 1. "Poción Multijugos" (peligro: 8, tiempo: 45, tipo: 'Transmutacion')
-    // 2. "Felix Felicis" (peligro: 3, tiempo: 120, tipo: 'Curacion')
-    // 3. "Filtro de Muertos" (peligro: 10, tiempo: 90, tipo: 'Prohibida')
-    //
-    // Pista: Construye objetos con la estructura de la interfaz 'Pocion'.
+    // Reto 1 - Pociones ancestrales iniciales del caldero
     // =======================================================================
+    this.pociones = [
+      {
+        id: 1,
+        nombre: 'Poción Multijugos',
+        descripcion: 'Permite adoptar temporalmente la apariencia física de otra persona.',
+        nivelPeligro: 8,
+        tiempoCoccionMinutos: 45,
+        tipoMagia: 'Transmutacion',
+        ingredientes: ['Crisopas', 'Sanguijuelas', 'Pelo de la persona a imitar'],
+        estable: false
+      },
+      {
+        id: 2,
+        nombre: 'Felix Felicis',
+        descripcion: 'Suerte líquida: otorga al bebedor una racha de fortuna durante un tiempo limitado.',
+        nivelPeligro: 3,
+        tiempoCoccionMinutos: 120,
+        tipoMagia: 'Curacion',
+        ingredientes: ['Cenizas de huevo de Ashwinder', 'Tentáculo de Murtlap'],
+        estable: true
+      },
+      {
+        id: 3,
+        nombre: 'Filtro de Muertos',
+        descripcion: 'Somnífero tan poderoso que induce un sueño idéntico a la muerte.',
+        nivelPeligro: 10,
+        tiempoCoccionMinutos: 90,
+        tipoMagia: 'Prohibida',
+        ingredientes: ['Ajenjo', 'Raíz de Asfódelo'],
+        estable: false
+      }
+    ];
 
     // Guardar estado inicial en el Giratiempo (se usa en el Reto 6)
     this.guardarEstadoGiratiempo();
