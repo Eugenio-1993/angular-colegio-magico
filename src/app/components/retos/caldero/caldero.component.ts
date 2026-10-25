@@ -109,8 +109,15 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // - nuevoNivelPeligro esté entre 1 y 10 inclusive.
   // =========================================================================
   esFormularioValido(): boolean {
-    // TODO: Reto 3 - Reemplaza 'return false' por tus validaciones
-    return false;
+    // El nombre se valida sin espacios accidentales al inicio o al final.
+    const nombreLimpio = this.nuevoNombre.trim();
+
+    return (
+      nombreLimpio.length >= 3 &&
+      this.nuevoTiempoCoccion > 0 &&
+      this.nuevoNivelPeligro >= 1 &&
+      this.nuevoNivelPeligro <= 10
+    );
   }
 
   // =========================================================================
@@ -124,7 +131,28 @@ export class CalderoComponent implements OnInit, OnDestroy {
   prepararPocion(): void {
     if (!this.esFormularioValido()) return;
 
-    // TODO: Reto 3 - Construye el objeto Pocion, haz push a this.pociones y resetea las variables
+    const nuevaPocion: Pocion = {
+      id: Date.now(),
+      nombre: this.nuevoNombre.trim(),
+      descripcion: this.nuevaDescripcion.trim() || 'Poción recién elaborada.',
+      nivelPeligro: this.nuevoNivelPeligro,
+      tiempoCoccionMinutos: this.nuevoTiempoCoccion,
+      tipoMagia: this.nuevoTipoMagia,
+      ingredientes: ['Ingrediente secreto'],
+      estable: this.nuevoNivelPeligro <= 7
+    };
+
+    this.pociones.push(nuevaPocion);
+
+    // Registra el nuevo estado para que el Giratiempo pueda deshacerlo (Reto 6).
+    this.guardarEstadoGiratiempo();
+
+    // Deja el formulario listo para preparar otra poción.
+    this.nuevoNombre = '';
+    this.nuevaDescripcion = '';
+    this.nuevoNivelPeligro = 1;
+    this.nuevoTiempoCoccion = 10;
+    this.nuevoTipoMagia = 'Curacion';
   }
 
   eliminarPocion(id: number): void {
