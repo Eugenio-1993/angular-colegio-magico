@@ -238,35 +238,52 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // -------------------------------------------------------------------------
   // RETO 6 (IA CHALLENGE): EL GIRATIEMPO (Historial Undo / Redo)
   // -------------------------------------------------------------------------
-  // =========================================================================
-  // TODO: Reto 6 - El Giratiempo / Historial Inmutable (Apóyate en la IA)
-  // Implementa un sistema de Undo/Redo con inmutabilidad profunda:
-  // - guardarEstadoGiratiempo(): Si se hizo undo y se agrega una acción, descarta
-  //   el futuro. Clona 'this.pociones' profundamente y añádelo a 'this.historialPasos'.
-  // - puedeDeshacer(): Retorna true si indiceHistorial > 0.
-  // - puedeRehacer(): Retorna true si indiceHistorial < historialPasos.length - 1.
-  // - giratiempoDeshacer(): Retrocede el índice y restaura una copia de ese estado.
-  // - giratiempoRehacer(): Avanza el índice y restaura una copia de ese estado.
-  // =========================================================================
+  // Crea una copia profunda de una lista de pociones. El spread de cada
+  // poción copia sus datos y el spread de ingredientes evita que dos estados
+  // del historial compartan la misma referencia en memoria.
+  private clonarPociones(pociones: Pocion[]): Pocion[] {
+    return pociones.map(pocion => ({
+      ...pocion,
+      ingredientes: [...pocion.ingredientes]
+    }));
+  }
+
   guardarEstadoGiratiempo(): void {
-    // TODO: Reto 6 - Implementar guardado inmutable en el historial
+    // Si el usuario retrocedió y ahora hace una acción nueva, los estados
+    // que estaban "en el futuro" se descartan para abrir una nueva línea.
+    this.historialPasos = this.historialPasos.slice(
+      0,
+      this.indiceHistorial + 1
+    );
+
+    // Guardamos una copia independiente del estado actual del caldero.
+    this.historialPasos.push(this.clonarPociones(this.pociones));
+    this.indiceHistorial = this.historialPasos.length - 1;
   }
 
   puedeDeshacer(): boolean {
-    // TODO: Reto 6 - Retornar si es posible retroceder
-    return false;
+    return this.indiceHistorial > 0;
   }
 
   puedeRehacer(): boolean {
-    // TODO: Reto 6 - Retornar si es posible avanzar
-    return false;
+    return this.indiceHistorial < this.historialPasos.length - 1;
   }
 
   giratiempoDeshacer(): void {
-    // TODO: Reto 6 - Revertir al estado anterior
+    if (!this.puedeDeshacer()) return;
+
+    this.indiceHistorial--;
+    this.pociones = this.clonarPociones(
+      this.historialPasos[this.indiceHistorial]
+    );
   }
 
   giratiempoRehacer(): void {
-    // TODO: Reto 6 - Avanzar al estado siguiente
+    if (!this.puedeRehacer()) return;
+
+    this.indiceHistorial++;
+    this.pociones = this.clonarPociones(
+      this.historialPasos[this.indiceHistorial]
+    );
   }
 }
