@@ -175,27 +175,63 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // -------------------------------------------------------------------------
   // RETO 5 (IA CHALLENGE): MOTOR DE FILTRADO Y ESTABILIDAD
   // -------------------------------------------------------------------------
-  // =========================================================================
-  // TODO: Reto 5 - Motor de Búsqueda y Filtros Combinados (Apóyate en la IA)
-  // Debe retornar una copia filtrada y ordenada de 'this.pociones':
-  // 1. Filtro texto (filtroTexto): Insensible a mayúsculas, coincidencia en nombre o descripción.
-  // 2. Filtro tipo de magia (filtroTipoMagia): Si es diferente de 'TODAS', filtrar por tipoMagia.
-  // 3. Filtro peligro (filtroSoloPeligrosas): Si es true, solo incluir pociones con nivelPeligro > 7.
-  // 4. Ordenamiento: Si ordenAscendente es true, menor a mayor peligro; si false, mayor a menor.
-  // =========================================================================
   getPocionesFiltradas(): Pocion[] {
-    // TODO: Reto 5 - Reemplaza este retorno simple por el algoritmo completo
-    return this.pociones;
+    // Partimos de una copia para no modificar el arreglo original del caldero.
+    let resultado = [...this.pociones];
+
+    // 1. Búsqueda por texto en el nombre o en la descripción, sin distinguir
+    //    mayúsculas de minúsculas.
+    const textoBuscado = this.filtroTexto.trim().toLowerCase();
+    if (textoBuscado) {
+      resultado = resultado.filter(
+        pocion =>
+          pocion.nombre.toLowerCase().includes(textoBuscado) ||
+          pocion.descripcion.toLowerCase().includes(textoBuscado)
+      );
+    }
+
+    // 2. Filtro por tipo de magia. 'TODAS' significa que no se filtra.
+    if (this.filtroTipoMagia !== 'TODAS') {
+      resultado = resultado.filter(
+        pocion => pocion.tipoMagia === this.filtroTipoMagia
+      );
+    }
+
+    // 3. Si se pide, dejamos solo las pociones con peligro mayor a 7.
+    if (this.filtroSoloPeligrosas) {
+      resultado = resultado.filter(pocion => pocion.nivelPeligro > 7);
+    }
+
+    // 4. Ordenamos por nivel de peligro. Usamos una copia, así que el arreglo
+    //    original conserva su orden.
+    resultado.sort((a, b) =>
+      this.ordenAscendente
+        ? a.nivelPeligro - b.nivelPeligro
+        : b.nivelPeligro - a.nivelPeligro
+    );
+
+    return resultado;
   }
 
-  // =========================================================================
-  // TODO: Reto 5 - Calcular Estabilidad General del Caldero:
-  // - Si hay 2 o más pociones con nivelPeligro >= 8 -> Retornar 'CRÍTICO'
-  // - Si hay al menos 1 poción con nivelPeligro >= 5 (y menos de 2 críticas) -> Retornar 'INESTABLE'
-  // - De lo contrario -> Retornar 'SEGURO'
-  // =========================================================================
   calcularEstabilidadCaldero(): 'SEGURO' | 'INESTABLE' | 'CRÍTICO' {
-    // TODO: Reto 5 - Reemplaza este retorno por tu lógica de cálculo
+    // Primero contamos las pociones críticas (peligro 8 o más).
+    const pocionesCriticas = this.pociones.filter(
+      pocion => pocion.nivelPeligro >= 8
+    ).length;
+
+    if (pocionesCriticas >= 2) {
+      return 'CRÍTICO';
+    }
+
+    // Si no es crítico, basta con una poción de peligro medio (5 o más).
+    const pocionesModeradas = this.pociones.filter(
+      pocion => pocion.nivelPeligro >= 5
+    ).length;
+
+    if (pocionesModeradas >= 1) {
+      return 'INESTABLE';
+    }
+
     return 'SEGURO';
   }
 
