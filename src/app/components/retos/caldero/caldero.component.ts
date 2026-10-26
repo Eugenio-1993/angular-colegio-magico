@@ -163,12 +163,13 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // -------------------------------------------------------------------------
   // IMPLEMENTACIÓN DEL CICLO DE VIDA (RETO 4)
   // -------------------------------------------------------------------------
-  // =========================================================================
-  // TODO: Reto 4 - En ngOnDestroy(), limpia el intervalo 'this.timerIntervalId'
-  // usando clearInterval() para evitar fugas de memoria o maldiciones residuales.
-  // =========================================================================
+  // Al destruir el componente se apaga el fuego del caldero para evitar
+  // que el intervalo siga ejecutándose en segundo plano (fuga de memoria).
   ngOnDestroy(): void {
-    // TODO: Reto 4 - Escribe aquí tu clearInterval
+    if (this.timerIntervalId !== null) {
+      clearInterval(this.timerIntervalId);
+      this.timerIntervalId = null;
+    }
   }
 
   // -------------------------------------------------------------------------
