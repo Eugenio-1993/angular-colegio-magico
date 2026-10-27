@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MagiaVisualComponent } from './magia-visual/magia-visual.component';
 
 // ============================================================================
 // 🎨 RETO 7: "SPRINT CONTRA LA PROCRASTINACIÓN"
@@ -64,7 +65,7 @@ interface PiezaConfeti {
 @Component({
   selector: 'app-artefacto-creativo',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MagiaVisualComponent],
   templateUrl: './artefacto-creativo.component.html',
   styleUrl: './artefacto-creativo.component.css'
 })

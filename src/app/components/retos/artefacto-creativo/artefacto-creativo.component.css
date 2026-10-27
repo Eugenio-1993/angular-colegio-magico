@@ -1016,3 +1016,113 @@ button, input, select {
   .grupo:not([data-grupo='Sanacion']) .rejilla-tecnicas { grid-template-columns: 1fr; }
   .grupo-cabeza { flex-direction: column; align-items: flex-start; }
 }
+
+/* ============================================================================
+   ✨ VERSIÓN 3 · TOQUE MÁGICO (solo estilo visual, el juego no se toca)
+   Todo sigue las reglas del DESIGN.md: colores planos, sin sombras ni
+   degradados. La magia viene del movimiento, las estrellas y el cursor.
+   ============================================================================ */
+
+/* El contenido va por encima del cielo de estrellas */
+.contenedor { position: relative; z-index: 1; }
+
+/* ---- Cursor de varita (punta de estrella lima; amarilla sobre lo clicable) ---- */
+:host {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M5 28 L21 12' stroke='%23141414' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M5 28 L21 12' stroke='%23fdf9f0' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M24 1 L26 6 L31 8 L26 10 L24 15 L22 10 L17 8 L22 6 Z' fill='%23c7ff69' stroke='%23141414' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") 24 8, auto;
+}
+
+.btn:not(:disabled),
+.casilla:not(:disabled),
+.tecnica:not(:disabled),
+.quitar,
+.enlace-volver,
+select.entrada {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M5 28 L21 12' stroke='%23141414' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M5 28 L21 12' stroke='%23fdf9f0' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M24 1 L26 6 L31 8 L26 10 L24 15 L22 10 L17 8 L22 6 Z' fill='%23ffc412' stroke='%23141414' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") 24 8, pointer;
+}
+
+/* ---- Chispas del hero: ahora sí se ven, con colores del sistema ---- */
+.chispa { display: block; }
+.c1 { color: var(--nav-amarillo); }
+.c2 { color: var(--nav-lila); }
+.c3 { color: var(--nav-lima); }
+
+/* ---- Fichas del hero: se menean cuando pasas la varita ---- */
+.marcas .marca:hover { animation: trote 0.45s ease-in-out infinite; }
+
+/* ---- Destello en la palabra destacada del titular ---- */
+.pildora-hero { position: relative; }
+.pildora-hero::after,
+.pildora-hero::before {
+  position: absolute;
+  pointer-events: none;
+  animation: titilar 2.4s ease-in-out infinite;
+}
+.pildora-hero::after { content: '✦'; top: -0.05em; right: -0.18em; font-size: 0.32em; color: var(--nav-lima); }
+.pildora-hero::before { content: '✧'; bottom: 0.05em; left: -0.16em; font-size: 0.26em; color: var(--nav-lila); animation-delay: 1.1s; }
+
+/* ---- Abracadabra en los botones principales ---- */
+.btn-primario { position: relative; }
+.btn-primario::after,
+.btn-primario::before {
+  position: absolute;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--nav-negro);
+  opacity: 0;
+  transform: scale(0) rotate(-40deg);
+  transition: opacity 200ms ease, transform 350ms var(--resorte);
+  pointer-events: none;
+}
+.btn-primario::after { content: '✦'; top: -9px; right: 8px; }
+.btn-primario::before { content: '✧'; bottom: -7px; left: 10px; transition-delay: 60ms; }
+.btn-primario:hover:not(:disabled)::after,
+.btn-primario:hover:not(:disabled)::before { opacity: 1; transform: scale(1) rotate(0); }
+
+/* ---- Banners de estado: estrellitas que titilan en la esquina ---- */
+.banner { position: relative; }
+.banner::after {
+  content: '✦ ✧ ✦';
+  position: absolute;
+  top: 8px;
+  right: 22px;
+  font-size: 14px;
+  letter-spacing: 0.4em;
+  color: var(--nav-negro);
+  opacity: 0.5;
+  pointer-events: none;
+  animation: titilar 2.8s ease-in-out infinite;
+}
+
+/* ---- Tarjetas: aparecen como "invocadas" ---- */
+.tarjeta { animation: entrar 600ms var(--resorte) backwards; }
+.tablero > .tarjeta { animation-delay: 80ms; }
+.columna > .tarjeta:nth-child(2) { animation-delay: 160ms; }
+
+/* ---- La pista (tarjeta oscura): mini cielo estrellado ---- */
+.pista::before {
+  content: '✦   ·   ✧      ·   ✦   ·      ✧   ·   ✦';
+  position: absolute;
+  top: 80px;
+  left: 24px;
+  right: 24px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  color: var(--nav-crema);
+  opacity: 0.4;
+  pointer-events: none;
+  animation: titilar-suave 3.2s ease-in-out infinite;
+}
+
+@keyframes titilar-suave {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.55; }
+}
+
+/* ---- Técnicas disponibles: el emoji "chispea" al pasar la varita ---- */
+.tecnica:hover:not(:disabled) .tecnica-emoji { transform: rotate(-12deg) scale(1.3); }
+
+/* ---- Móvil: sin cursor personalizado ni adornos de más ---- */
+@media (hover: none) {
+  .pildora-hero::after, .pildora-hero::before { display: none; }
+}
